@@ -1,0 +1,47 @@
+---
+title: "Herramientas RMarkdown"
+subtitle: "Paquetes - Librerías de R & Python"
+---
+
+```{r setup,include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE)
+
+```
+
+<script type="text/javascript" src="links.js"></script>
+
+<center>
+
+![](logo_r_rmarkdown_python.png)
+
+</center>
+
+
+
+## R - Packages
+
+Para nuestro curso de ***Introducción a RMarkdown*** necesitamos instalar los siguiente paquetes (**Packages**) del lenguaje de programación R, que mostramos a continuación:
+
+- **ggplot2**
+
+- **lattice**
+
+- **vembedr**
+
+## Python - Libraries
+
+Para nuestro curso de ***Introducción a RMarkdown*** necesitamos instalar las siguientes librerías del lenguaje de programación Python, que mostramos a continuación:
+
+
+- **Matplotlib**
+
+- **Numpy**
+
+- **Seaborn**
+
+- **Folium**
+
+
+
+

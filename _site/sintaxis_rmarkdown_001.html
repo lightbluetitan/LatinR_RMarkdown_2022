@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Renzo Cáceres Rossi" />
+
+
+<title>Bar Charts - R</title>
+
+<script src="site_libs/header-attrs-2.16/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<script src="site_libs/navigation-1.1/sourceembed.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/vembedr-0.1.5/css/vembedr.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+<style type="text/css">
+#rmd-source-code {
+  display: none;
+}
+</style>
+
+<style type="text/css">
+/* for pandoc --citeproc since 2.11 */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style_002.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Intro RMarkdown</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Home
+  </a>
+</li>
+<li>
+  <a href="herramientas.html">
+    <span class="fa fa-tools"></span>
+     
+    Herramientas
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Labs
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="sintaxis_rmarkdown_001.html">R - RMarkdown</a>
+    </li>
+    <li>
+      <a href="rmarkdown_python_001.html">Python - RMarkdown</a>
+    </li>
+    <li>
+      <a href="mapas_interactivos_folium.html">Mapas - Folium</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://twitter.com/RHablamos">
+    <span class="fa fa-twitter"></span>
+     
+    
+  </a>
+</li>
+<li>
+  <a href="https://github.com/lightbluetitan">
+    <span class="fa fa-github"></span>
+     
+    
+  </a>
+</li>
+<li>
+  <a href="https://www.linkedin.com/in/andrescaceresrossi/">
+    <span class="fa fa-linkedin"></span>
+     
+    
+  </a>
+</li>
+<li>
+  <a href="https://www.facebook.com/renzo.caceresrossi/">
+    <span class="fa fa-facebook"></span>
+     
+    
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-download-source" href="#">Download Rmd</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Bar Charts - R</h1>
+<h3 class="subtitle">barplot() - ggplot2 - lattice</h3>
+<h4 class="author">Renzo Cáceres Rossi</h4>
+<h4 class="date">2022/10/07</h4>
+
+</div>
+
+
+<!-- Añadir comentarios a nuestro documento RMarkdown -- HTMl tags -->
+<script type="text/javascript" src="links.js"></script>
+<div id="diagramas-de-barras" class="section level2">
+<h2>Diagramas de Barras</h2>
+<p>El diagrama de barras (<strong>Bar Chart</strong>) es un gráfico
+estadístico que nos permite representar la distribución de frecuencias
+de variables cualitativas y cuantitativas discretas; nuestro objetivo es
+pasar del lápiz y papel al uso de los lenguajes de programación R
+version 4.2.1 (2022-06-23 ucrt)<span class="citation">(<a
+href="#ref-Rprogramming" role="doc-biblioref">R Core Team,
+2022</a>)</span> y Python 3.9.7<span class="citation">(<a
+href="#ref-van1995python" role="doc-biblioref">Van Rossum &amp; Drake
+Jr, 1995</a>)</span>, recomendamos la lectura del libro <strong>El Arte
+de Programar en R</strong><span class="citation">(<a
+href="#ref-santana2014arte" role="doc-biblioref">Santana Sepúlveda et
+al., 2014</a>)</span>; compartimos la siguiente imagen como
+referencia.</p>
+<center>
+<p><img src="diagrama_barras_amano.jpg" width="400" /></p>
+</center>
+</div>
+<div id="data-set---mtcars" class="section level2 tabset tabset-pills">
+<h2 class="tabset tabset-pills">Data Set - mtcars</h2>
+<p><strong>mtcars</strong> es un data set que ya viene precargado al
+momento de instalar el <strong>lenguaje de programación R</strong> en
+nuestro sistema, haremos uso de dicho data set para la creación de
+distintos diagramas de barras, de las 11 variables y 32 observaciones
+que lo componen nos enfocaremos en las variables <strong>cyl</strong>
+(cilindro) y <strong>gear</strong> (engranajes) como se muestra a
+continuación.</p>
+<div id="mtcars" class="section level3">
+<h3>mtcars</h3>
+<pre class="r"><code>summary(mtcars)</code></pre>
+<pre><code>##       mpg             cyl             disp             hp       
+##  Min.   :10.40   Min.   :4.000   Min.   : 71.1   Min.   : 52.0  
+##  1st Qu.:15.43   1st Qu.:4.000   1st Qu.:120.8   1st Qu.: 96.5  
+##  Median :19.20   Median :6.000   Median :196.3   Median :123.0  
+##  Mean   :20.09   Mean   :6.188   Mean   :230.7   Mean   :146.7  
+##  3rd Qu.:22.80   3rd Qu.:8.000   3rd Qu.:326.0   3rd Qu.:180.0  
+##  Max.   :33.90   Max.   :8.000   Max.   :472.0   Max.   :335.0  
+##       drat             wt             qsec             vs        
+##  Min.   :2.760   Min.   :1.513   Min.   :14.50   Min.   :0.0000  
+##  1st Qu.:3.080   1st Qu.:2.581   1st Qu.:16.89   1st Qu.:0.0000  
+##  Median :3.695   Median :3.325   Median :17.71   Median :0.0000  
+##  Mean   :3.597   Mean   :3.217   Mean   :17.85   Mean   :0.4375  
+##  3rd Qu.:3.920   3rd Qu.:3.610   3rd Qu.:18.90   3rd Qu.:1.0000  
+##  Max.   :4.930   Max.   :5.424   Max.   :22.90   Max.   :1.0000  
+##        am              gear            carb      
+##  Min.   :0.0000   Min.   :3.000   Min.   :1.000  
+##  1st Qu.:0.0000   1st Qu.:3.000   1st Qu.:2.000  
+##  Median :0.0000   Median :4.000   Median :2.000  
+##  Mean   :0.4062   Mean   :3.688   Mean   :2.812  
+##  3rd Qu.:1.0000   3rd Qu.:4.000   3rd Qu.:4.000  
+##  Max.   :1.0000   Max.   :5.000   Max.   :8.000</code></pre>
+</div>
+<div id="var_cyl" class="section level3">
+<h3>var_cyl</h3>
+<pre class="r"><code>summary(mtcars$cyl)</code></pre>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##   4.000   4.000   6.000   6.188   8.000   8.000</code></pre>
+<pre class="r"><code>cyl_table &lt;- sqldf(&quot;select cyl,count(cyl) as cantidad from mtcars group by cyl&quot;)
+
+cyl_table</code></pre>
+<pre><code>##   cyl cantidad
+## 1   4       11
+## 2   6        7
+## 3   8       14</code></pre>
+</div>
+<div id="var_gear" class="section level3 active">
+<h3 class="active">var_gear</h3>
+<pre class="r"><code>summary(mtcars$gear)</code></pre>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##   3.000   3.000   4.000   3.688   4.000   5.000</code></pre>
+<pre class="r"><code>gear_table &lt;- sqldf(&quot;select gear,count(gear) as cantidad from mtcars group by gear&quot;)
+
+gear_table</code></pre>
+<pre><code>##   gear cantidad
+## 1    3       15
+## 2    4       12
+## 3    5        5</code></pre>
+</div>
+<div id="var_carb" class="section level3">
+<h3>var_carb</h3>
+<pre class="r"><code>summary(mtcars$carb)</code></pre>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##   1.000   2.000   2.000   2.812   4.000   8.000</code></pre>
+<pre class="r"><code>carb_table &lt;- sqldf(&quot;select carb,count(carb) as cantidad from mtcars group by carb&quot;)
+
+carb_table</code></pre>
+<pre><code>##   carb cantidad
+## 1    1        7
+## 2    2       10
+## 3    3        3
+## 4    4       10
+## 5    6        1
+## 6    8        1</code></pre>
+</div>
+</div>
+<div id="bar-chart---barplot" class="section level2">
+<h2>Bar Chart - barplot()</h2>
+<p>La función <code>barplot()</code> nos permite crear diagramas de
+barras (<strong>Bar Charts</strong>) en el lenguaje de programación R,
+utilizaremos la variable cyl (<strong>cilindros</strong>) para crear el
+gráfico estadístico respectivo, como se muestra en la siguiente
+imagen.</p>
+<pre class="r"><code>x &lt;- table(mtcars$cyl)
+
+colores &lt;- c(&quot;orange&quot;,&quot;blue&quot;,&quot;purple&quot;)
+
+barplot(x,xlab=&quot;Cilindros&quot;,ylab=&quot;Frecuencias&quot;,main=&quot;Número de Cilindros&quot;,col=colores)</code></pre>
+<div class="figure" style="text-align: center">
+<img src="sintaxis_rmarkdown_001_files/figure-html/barplot-1.png" alt="Bar Chart creado con la función barplot()" width="672" />
+<p class="caption">
+Bar Chart creado con la función barplot()
+</p>
+</div>
+</div>
+<div id="bar-chart---ggplot2" class="section level2">
+<h2>Bar Chart - ggplot2</h2>
+<p><strong>ggplot2</strong><span class="citation">(<a
+href="#ref-ggplot2" role="doc-biblioref">Wickham, 2016</a>)</span> es un
+paquete del lenguaje de programación que nos permite crear gráficos
+estadísticos de gran calidad, haremos uso de la variable cyl
+(<strong>cilindros</strong>) para la creación del gráfico estadístico
+respectivo, como se muestra a continuación.</p>
+<pre class="r"><code>ggplot(mtcars,aes(cyl)) + geom_bar(fill=colores) + labs(x=&quot;Cillindros&quot;,y=&quot;Frecuencias&quot;,title=&quot;Número de Cilindros&quot;) + theme_dark()</code></pre>
+<div class="figure" style="text-align: center">
+<img src="sintaxis_rmarkdown_001_files/figure-html/ggplot2-1.png" alt="Bar Chart creado con el paquete ggplot2" width="672" />
+<p class="caption">
+Bar Chart creado con el paquete ggplot2
+</p>
+</div>
+</div>
+<div id="bar-chart---lattice" class="section level2">
+<h2>Bar Chart - Lattice</h2>
+<p><strong>Lattice</strong><span class="citation">(<a
+href="#ref-lattice" role="doc-biblioref">Sarkar, 2008</a>)</span> es un
+paquete del lenguaje de programación R, que nos permite crear gráficos
+estadísticos de muy buena calidad, nos enfocaremos en la variable cyl
+(<strong>cilindros</strong>) para la creación del gráfico estadístico
+respectivo, como se muestra a continuación.</p>
+<pre class="r"><code>barchart(x,xlab=&quot;Cilindros&quot;,ylab=&quot;Frecuencias&quot;,main=&quot;Número de Cilindros&quot;,col=colores,horizontal=FALSE)</code></pre>
+<div class="figure" style="text-align: center">
+<img src="sintaxis_rmarkdown_001_files/figure-html/lattice-1.png" alt="Bar Chart creado con el paquete lattice" width="672" />
+<p class="caption">
+Bar Chart creado con el paquete lattice
+</p>
+</div>
+</div>
+<div id="mtcars---cyl-gear" class="section level2">
+<h2>mtcars - cyl &amp; gear</h2>
+<p>A continuación, mostramos como unir dos diagramas de barras
+(<strong>Bar Charts</strong>) en un solo gráfico, tomando como base el
+data set <strong>mtcars</strong>, así como sus variables
+<strong>cyl</strong> (cilindros) y <strong>gear</strong>
+(engranajes).</p>
+<pre class="r"><code>y &lt;- table(mtcars$gear)
+
+par(mfrow=c(1,2))
+
+barplot(x,xlab=&quot;Cilindros&quot;,ylab=&quot;Frecuencias&quot;,main=&quot;Número de Cilindros&quot;,col=colores)
+
+barplot(y,xlab=&quot;Engranajes&quot;,ylab=&quot;Frecuencias&quot;,main=&quot;Número de Engranajes&quot;,col=rainbow(3))</code></pre>
+<p><img src="sintaxis_rmarkdown_001_files/figure-html/cyl_gear-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="bar-charts---matplotlib" class="section level2">
+<h2>Bar Charts - Matplotlib</h2>
+<p><strong>Matplotlib</strong><span class="citation">(<a
+href="#ref-Hunter:2007" role="doc-biblioref">Hunter, 2007</a>)</span> es
+una librería del lenguaje de programación Python, que nos permite crear
+gráficos estadísticos de gran calidad, <strong>RMarkdown</strong><span
+class="citation">(<a href="#ref-RMarkdown" role="doc-biblioref">Allaire
+et al., 2022</a>)</span> nos permite trabajar con otros lenguajes de
+programación tales como <strong>C++, SQL, Julia</strong>, entre muchos
+otros; a continuación mostramos un diagrama de barras (<strong>Bar
+Chart</strong>) creado con Matplotlib.</p>
+<pre class="python"><code>
+eje_x = [&#39;Python&#39;, &#39;R&#39;, &#39;Node.js&#39;, &#39;PHP&#39;]
+ 
+
+eje_y = [50,20,35,47]
+ 
+
+plt.bar(eje_x, eje_y)
+ 
+plt.ylabel(&#39;Cantidad de usuarios&#39;)
+ 
+
+plt.xlabel(&#39;Lenguajes de programación&#39;)
+ 
+
+plt.title(&#39;Usuarios de lenguajes de programación&#39;)
+ 
+
+plt.show()
+</code></pre>
+<div class="figure" style="text-align: center">
+<img src="sintaxis_rmarkdown_001_files/figure-html/unnamed-chunk-2-1.png" alt="Bar Chart creado con la librería Matplotlib" width="672" />
+<p class="caption">
+Bar Chart creado con la librería Matplotlib
+</p>
+</div>
+</div>
+<div id="bar-charts---seaborn" class="section level2">
+<h2>Bar Charts - Seaborn</h2>
+<p><strong>Seaborn</strong><span class="citation">(<a
+href="#ref-michael_waskom_2017_883859" role="doc-biblioref">Waskom et
+al., 2017</a>)</span> es una librería de Python que nos permite crear
+gráficos estadísticos de gran calidad, fue creada tomando como base
+<strong>Matplotlib</strong>.</p>
+<pre class="python"><code>
+eje_x = [4,6,8]
+
+eje_y = [11,7,14]
+
+sns.barplot(x=eje_x,y=eje_y)
+
+plt.title(&quot;Número de cilindros&quot;)
+
+plt.xlabel(&quot;Cilindros&quot;)
+
+plt.ylabel(&quot;Frecuencias&quot;)
+
+plt.show()
+</code></pre>
+<div class="figure" style="text-align: center">
+<img src="sintaxis_rmarkdown_001_files/figure-html/unnamed-chunk-3-3.png" alt="Bar Chart creado usando la librería Seaborn" width="672" />
+<p class="caption">
+Bar Chart creado usando la librería Seaborn
+</p>
+</div>
+</div>
+<div id="youtube---tutorial" class="section level2">
+<h2>YouTube - Tutorial</h2>
+<p>Compartimos el siguiente tutorial tomado de la plataforma
+<strong>YouTube</strong> que muestra como crear diagramas de barras
+(<strong>Bar Charts</strong>) haciendo uso de la función
+<code>barplot()</code> y el paquete <strong>ggplot2</strong> del
+lenguaje de programación R.</p>
+<pre class="r"><code>embed_url(&quot;https://www.youtube.com/watch?v=EkxRj02iaLk&amp;t=6s&quot;) %&gt;% 
+  use_align(&quot;center&quot;)</code></pre>
+<div class="vembedr" align="center">
+<div>
+<iframe src="https://www.youtube.com/embed/EkxRj02iaLk?start=6" width="533" height="300" frameborder="0" allowfullscreen="" data-external="1"></iframe>
+</div>
+</div>
+</div>
+<div id="referencias-bibliográficas" class="section level2">
+<h2>Referencias Bibliográficas</h2>
+<div class="tocify-extend-page" data-unique="tocify-extend-page"
+style="height: 0;">
+
+</div>
+<div id="refs" class="references csl-bib-body hanging-indent"
+line-spacing="2">
+<div id="ref-RMarkdown" class="csl-entry">
+Allaire, J., Xie, Y., McPherson, J., Luraschi, J., Ushey, K., Atkins,
+A., Wickham, H., Cheng, J., Chang, W., &amp; Iannone, R. (2022).
+<em>Rmarkdown: Dynamic documents for r</em>. <a
+href="https://github.com/rstudio/rmarkdown">https://github.com/rstudio/rmarkdown</a>
+</div>
+<div id="ref-Hunter:2007" class="csl-entry">
+Hunter, J. D. (2007). Matplotlib: A 2D graphics environment.
+<em>Computing in Science &amp; Engineering</em>, <em>9</em>(3), 90–95.
+<a
+href="https://doi.org/10.1109/MCSE.2007.55">https://doi.org/10.1109/MCSE.2007.55</a>
+</div>
+<div id="ref-Rprogramming" class="csl-entry">
+R Core Team. (2022). <em>R: A language and environment for statistical
+computing</em>. R Foundation for Statistical Computing. <a
+href="https://www.R-project.org/">https://www.R-project.org/</a>
+</div>
+<div id="ref-santana2014arte" class="csl-entry">
+Santana Sepúlveda, S., Mateos Farfán, E., et al. (2014). <em>El arte de
+programar en r: Un lenguaje para la estad<span>ı́</span>stica</em>.
+M<span>é</span>xico: Instituto Mexicano de Tecnolog<span>ı́</span>a del
+Agua. UNESCO. Comit<span>é</span> Nacional ….
+</div>
+<div id="ref-lattice" class="csl-entry">
+Sarkar, D. (2008). <em>Lattice: Multivariate data visualization with
+r</em>. Springer. <a
+href="http://lmdvr.r-forge.r-project.org">http://lmdvr.r-forge.r-project.org</a>
+</div>
+<div id="ref-van1995python" class="csl-entry">
+Van Rossum, G., &amp; Drake Jr, F. L. (1995). <em>Python reference
+manual</em>. Centrum voor Wiskunde en Informatica Amsterdam.
+</div>
+<div id="ref-michael_waskom_2017_883859" class="csl-entry">
+Waskom, M., Botvinnik, O., O’Kane, D., Hobson, P., Lukauskas, S.,
+Gemperline, D. C., Augspurger, T., Halchenko, Y., Cole, J. B.,
+Warmenhoven, J., Ruiter, J. de, Pye, C., Hoyer, S., Vanderplas, J.,
+Villalba, S., Kunter, G., Quintero, E., Bachant, P., Martin, M., …
+Qalieh, A. (2017). <em>Mwaskom/seaborn: v0.8.1 (september 2017)</em>
+(Version v0.8.1) [Computer software]. Zenodo. <a
+href="https://doi.org/10.5281/zenodo.883859">https://doi.org/10.5281/zenodo.883859</a>
+</div>
+<div id="ref-ggplot2" class="csl-entry">
+Wickham, H. (2016). <em>ggplot2: Elegant graphics for data
+analysis</em>. Springer-Verlag New York. <a
+href="https://ggplot2.tidyverse.org">https://ggplot2.tidyverse.org</a>
+</div>
+</div>
+</div>
+
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIkJhciBDaGFydHMgLSBSIg0Kc3VidGl0bGU6ICJiYXJwbG90KCkgLSBnZ3Bsb3QyIC0gbGF0dGljZSINCmF1dGhvcjogIlJlbnpvIEPDoWNlcmVzIFJvc3NpIg0KZGF0ZTogIjIwMjIvMTAvMDciDQpvdXRwdXQ6DQogIGh0bWxfZG9jdW1lbnQ6DQogICAgdG9jOiBUUlVFDQogICAgdG9jX2Zsb2F0OiBUUlVFDQogICAgY29kZV9kb3dubG9hZDogVFJVRQ0KICAgIHRoZW1lOiBmbGF0bHkNCiAgICBjc3M6ICJzdHlsZV8wMDIuY3NzIg0KYmlibGlvZ3JhcGh5OiBiaWJsaW9fMDAxLmJpYg0KY3NsOiBhcGEuY3NsDQpsaW5rLWNpdGF0aW9uczogeWVzDQotLS0NCg0KPCEtLSBBw7FhZGlyIGNvbWVudGFyaW9zIGEgbnVlc3RybyBkb2N1bWVudG8gUk1hcmtkb3duIC0tIEhUTWwgdGFncyAtLT4NCg0KYGBge3Igc2V0dXAsaW5jbHVkZT1GQUxTRX0NCg0KbGlicmFyeShnZ3Bsb3QyKQ0KDQpsaWJyYXJ5KGxhdHRpY2UpDQoNCmxpYnJhcnkoc3FsZGYpDQoNCmxpYnJhcnkodmVtYmVkcikNCg0KbGlicmFyeShyZXRpY3VsYXRlKQ0KDQprbml0cjo6b3B0c19jaHVuayRzZXQoZWNobz1UUlVFKQ0KYGBgDQoNCg0KYGBge3B5dGhvbixpbmNsdWRlPUZBTFNFfQ0KDQpmcm9tIHBsYXRmb3JtIGltcG9ydCBweXRob25fdmVyc2lvbg0KDQp2ZXJzaW9uPXB5dGhvbl92ZXJzaW9uKCkNCg0KaW1wb3J0IG1hdHBsb3RsaWIucHlwbG90IGFzIHBsdA0KDQppbXBvcnQgbnVtcHkgYXMgbnANCg0KaW1wb3J0IHNlYWJvcm4gYXMgc25zDQoNCg0KYGBgDQoNCg0KPHNjcmlwdCB0eXBlPSJ0ZXh0L2phdmFzY3JpcHQiIHNyYz0ibGlua3MuanMiPjwvc2NyaXB0Pg0KDQojIyBEaWFncmFtYXMgZGUgQmFycmFzIA0KDQpFbCBkaWFncmFtYSBkZSBiYXJyYXMgKCoqQmFyIENoYXJ0KiopIGVzIHVuIGdyw6FmaWNvIGVzdGFkw61zdGljbyBxdWUgbm9zIHBlcm1pdGUgcmVwcmVzZW50YXIgbGEgZGlzdHJpYnVjacOzbiBkZSBmcmVjdWVuY2lhcyBkZSB2YXJpYWJsZXMgY3VhbGl0YXRpdmFzIHkgY3VhbnRpdGF0aXZhcyBkaXNjcmV0YXM7IG51ZXN0cm8gb2JqZXRpdm8gZXMgcGFzYXIgZGVsIGzDoXBpeiB5IHBhcGVsIGFsIHVzbyBkZSBsb3MgbGVuZ3VhamVzIGRlIHByb2dyYW1hY2nDs24gYHIgUi52ZXJzaW9uLnN0cmluZ2BbQFJwcm9ncmFtbWluZ10geSBQeXRob24gYHIgcHkkdmVyc2lvbmBbQHZhbjE5OTVweXRob25dLCByZWNvbWVuZGFtb3MgbGEgbGVjdHVyYSBkZWwgbGlicm8gKipFbCBBcnRlIGRlIFByb2dyYW1hciBlbiBSKipbQHNhbnRhbmEyMDE0YXJ0ZV07IGNvbXBhcnRpbW9zIGxhIHNpZ3VpZW50ZSBpbWFnZW4gY29tbyByZWZlcmVuY2lhLg0KDQo8Y2VudGVyPg0KDQoNCiFbXShkaWFncmFtYV9iYXJyYXNfYW1hbm8uanBnKXt3aWR0aD00MDB9DQoNCjwvY2VudGVyPg0KDQoNCiMjIERhdGEgU2V0IC0gbXRjYXJzIHsudGFic2V0IC50YWJzZXQtcGlsbHN9DQoNCioqbXRjYXJzKiogZXMgdW4gZGF0YSBzZXQgcXVlIHlhIHZpZW5lIHByZWNhcmdhZG8gYWwgbW9tZW50byBkZSBpbnN0YWxhciBlbCAqKmxlbmd1YWplIGRlIHByb2dyYW1hY2nDs24gUioqIGVuIG51ZXN0cm8gc2lzdGVtYSwgaGFyZW1vcyB1c28gZGUgZGljaG8gZGF0YSBzZXQgcGFyYSBsYSBjcmVhY2nDs24gZGUgZGlzdGludG9zIGRpYWdyYW1hcyBkZSBiYXJyYXMsIGRlIGxhcyAxMSB2YXJpYWJsZXMgeSAzMiBvYnNlcnZhY2lvbmVzIHF1ZSBsbyBjb21wb25lbiBub3MgZW5mb2NhcmVtb3MgZW4gbGFzIHZhcmlhYmxlcyAqKmN5bCoqIChjaWxpbmRybykgeSAqKmdlYXIqKiAoZW5ncmFuYWplcykgY29tbyBzZSBtdWVzdHJhIGEgY29udGludWFjacOzbi4NCg0KIyMjIG10Y2Fycw0KDQpgYGB7ciBtdGNhcnN9DQoNCnN1bW1hcnkobXRjYXJzKQ0KDQpgYGANCg0KDQojIyMgdmFyX2N5bA0KDQpgYGB7ciB2YXJfY3lsfQ0KDQpzdW1tYXJ5KG10Y2FycyRjeWwpDQoNCmN5bF90YWJsZSA8LSBzcWxkZigic2VsZWN0IGN5bCxjb3VudChjeWwpIGFzIGNhbnRpZGFkIGZyb20gbXRjYXJzIGdyb3VwIGJ5IGN5bCIpDQoNCmN5bF90YWJsZQ0KDQpgYGANCg0KDQojIyMgdmFyX2dlYXIgey5hY3RpdmV9DQoNCmBgYHtyIHZhcl9nZWFyfQ0KDQpzdW1tYXJ5KG10Y2FycyRnZWFyKQ0KDQpnZWFyX3RhYmxlIDwtIHNxbGRmKCJzZWxlY3QgZ2Vhcixjb3VudChnZWFyKSBhcyBjYW50aWRhZCBmcm9tIG10Y2FycyBncm91cCBieSBnZWFyIikNCg0KZ2Vhcl90YWJsZQ0KDQpgYGANCg0KDQoNCiMjIyB2YXJfY2FyYg0KDQpgYGB7ciB2YXJfY2FyYn0NCg0Kc3VtbWFyeShtdGNhcnMkY2FyYikNCg0KY2FyYl90YWJsZSA8LSBzcWxkZigic2VsZWN0IGNhcmIsY291bnQoY2FyYikgYXMgY2FudGlkYWQgZnJvbSBtdGNhcnMgZ3JvdXAgYnkgY2FyYiIpDQoNCmNhcmJfdGFibGUNCg0KDQpgYGANCg0KDQojIyBCYXIgQ2hhcnQgLSBiYXJwbG90KCkNCg0KTGEgZnVuY2nDs24gIGBiYXJwbG90KClgIG5vcyBwZXJtaXRlIGNyZWFyIGRpYWdyYW1hcyBkZSBiYXJyYXMgKCoqQmFyIENoYXJ0cyoqKSBlbiBlbCBsZW5ndWFqZSBkZSBwcm9ncmFtYWNpw7NuIFIsIHV0aWxpemFyZW1vcyBsYSB2YXJpYWJsZSBjeWwgKCoqY2lsaW5kcm9zKiopIHBhcmEgY3JlYXIgZWwgZ3LDoWZpY28gZXN0YWTDrXN0aWNvIHJlc3BlY3Rpdm8sIGNvbW8gc2UgbXVlc3RyYSBlbiBsYSBzaWd1aWVudGUgaW1hZ2VuLg0KDQpgYGB7ciBiYXJwbG90LGZpZy5hbGlnbj0nY2VudGVyJyxmaWcuY2FwPSJCYXIgQ2hhcnQgY3JlYWRvIGNvbiBsYSBmdW5jacOzbiBiYXJwbG90KCkifQ0KDQp4IDwtIHRhYmxlKG10Y2FycyRjeWwpDQoNCmNvbG9yZXMgPC0gYygib3JhbmdlIiwiYmx1ZSIsInB1cnBsZSIpDQoNCmJhcnBsb3QoeCx4bGFiPSJDaWxpbmRyb3MiLHlsYWI9IkZyZWN1ZW5jaWFzIixtYWluPSJOw7ptZXJvIGRlIENpbGluZHJvcyIsY29sPWNvbG9yZXMpDQoNCmBgYA0KDQoNCiMjIEJhciBDaGFydCAtIGdncGxvdDINCg0KKipnZ3Bsb3QyKipbQGdncGxvdDJdIGVzIHVuIHBhcXVldGUgZGVsIGxlbmd1YWplIGRlIHByb2dyYW1hY2nDs24gcXVlIG5vcyBwZXJtaXRlIGNyZWFyIGdyw6FmaWNvcyBlc3RhZMOtc3RpY29zIGRlIGdyYW4gY2FsaWRhZCwgaGFyZW1vcyB1c28gZGUgbGEgdmFyaWFibGUgY3lsICgqKmNpbGluZHJvcyoqKSBwYXJhIGxhIGNyZWFjacOzbiBkZWwgZ3LDoWZpY28gZXN0YWTDrXN0aWNvIHJlc3BlY3Rpdm8sIGNvbW8gc2UgbXVlc3RyYSBhIGNvbnRpbnVhY2nDs24uDQoNCmBgYHtyIGdncGxvdDIsZmlnLmFsaWduPSdjZW50ZXInLGZpZy5jYXA9IkJhciBDaGFydCBjcmVhZG8gY29uIGVsIHBhcXVldGUgZ2dwbG90MiJ9DQoNCmdncGxvdChtdGNhcnMsYWVzKGN5bCkpICsgZ2VvbV9iYXIoZmlsbD1jb2xvcmVzKSArIGxhYnMoeD0iQ2lsbGluZHJvcyIseT0iRnJlY3VlbmNpYXMiLHRpdGxlPSJOw7ptZXJvIGRlIENpbGluZHJvcyIpICsgdGhlbWVfZGFyaygpDQoNCg0KYGBgDQoNCg0KDQojIyBCYXIgQ2hhcnQgLSBMYXR0aWNlDQoNCioqTGF0dGljZSoqW0BsYXR0aWNlXSBlcyB1biBwYXF1ZXRlIGRlbCBsZW5ndWFqZSBkZSBwcm9ncmFtYWNpw7NuIFIsIHF1ZSBub3MgcGVybWl0ZSBjcmVhciBncsOhZmljb3MgZXN0YWTDrXN0aWNvcyBkZSBtdXkgYnVlbmEgY2FsaWRhZCwgbm9zIGVuZm9jYXJlbW9zIGVuIGxhIHZhcmlhYmxlIGN5bCAoKipjaWxpbmRyb3MqKikgcGFyYSBsYSBjcmVhY2nDs24gZGVsIGdyw6FmaWNvIGVzdGFkw61zdGljbyByZXNwZWN0aXZvLCBjb21vIHNlIG11ZXN0cmEgYSBjb250aW51YWNpw7NuLg0KDQpgYGB7ciBsYXR0aWNlLGZpZy5hbGlnbj0nY2VudGVyJyxmaWcuY2FwPSJCYXIgQ2hhcnQgY3JlYWRvIGNvbiBlbCBwYXF1ZXRlIGxhdHRpY2UifQ0KDQpiYXJjaGFydCh4LHhsYWI9IkNpbGluZHJvcyIseWxhYj0iRnJlY3VlbmNpYXMiLG1haW49Ik7Dum1lcm8gZGUgQ2lsaW5kcm9zIixjb2w9Y29sb3Jlcyxob3Jpem9udGFsPUZBTFNFKQ0KDQoNCmBgYA0KDQoNCiMjIG10Y2FycyAtIGN5bCAmIGdlYXINCg0KQSBjb250aW51YWNpw7NuLCBtb3N0cmFtb3MgY29tbyB1bmlyIGRvcyBkaWFncmFtYXMgZGUgYmFycmFzICgqKkJhciBDaGFydHMqKikgZW4gdW4gc29sbyBncsOhZmljbywgdG9tYW5kbyBjb21vIGJhc2UgZWwgZGF0YSBzZXQgKiptdGNhcnMqKiwgYXPDrSBjb21vIHN1cyB2YXJpYWJsZXMgKipjeWwqKiAoY2lsaW5kcm9zKSB5ICoqZ2VhcioqIChlbmdyYW5hamVzKS4NCg0KYGBge3IgY3lsX2dlYXIsZmlnLmFsaWduPSdjZW50ZXInfQ0KDQp5IDwtIHRhYmxlKG10Y2FycyRnZWFyKQ0KDQpwYXIobWZyb3c9YygxLDIpKQ0KDQpiYXJwbG90KHgseGxhYj0iQ2lsaW5kcm9zIix5bGFiPSJGcmVjdWVuY2lhcyIsbWFpbj0iTsO6bWVybyBkZSBDaWxpbmRyb3MiLGNvbD1jb2xvcmVzKQ0KDQpiYXJwbG90KHkseGxhYj0iRW5ncmFuYWplcyIseWxhYj0iRnJlY3VlbmNpYXMiLG1haW49Ik7Dum1lcm8gZGUgRW5ncmFuYWplcyIsY29sPXJhaW5ib3coMykpDQoNCg0KYGBgDQoNCg0KIyMgQmFyIENoYXJ0cyAtIE1hdHBsb3RsaWINCg0KKipNYXRwbG90bGliKipbQEh1bnRlcjoyMDA3XSBlcyB1bmEgbGlicmVyw61hIGRlbCBsZW5ndWFqZSBkZSBwcm9ncmFtYWNpw7NuIFB5dGhvbiwgcXVlIG5vcyBwZXJtaXRlIGNyZWFyIGdyw6FmaWNvcyBlc3RhZMOtc3RpY29zIGRlIGdyYW4gY2FsaWRhZCwgKipSTWFya2Rvd24qKltAUk1hcmtkb3duXSBub3MgcGVybWl0ZSB0cmFiYWphciBjb24gb3Ryb3MgbGVuZ3VhamVzIGRlIHByb2dyYW1hY2nDs24gdGFsZXMgY29tbyAqKkMrKywgU1FMLCBKdWxpYSoqLCBlbnRyZSBtdWNob3Mgb3Ryb3M7IGEgY29udGludWFjacOzbiBtb3N0cmFtb3MgdW4gZGlhZ3JhbWEgZGUgYmFycmFzICgqKkJhciBDaGFydCoqKSBjcmVhZG8gY29uIE1hdHBsb3RsaWIuDQoNCg0KYGBge3B5dGhvbixyZXN1bHRzPSdoaWRlJyxjb2xsYXBzZT1UUlVFLGZpZy5hbGlnbj0iY2VudGVyIixmaWcuY2FwPSJCYXIgQ2hhcnQgY3JlYWRvIGNvbiBsYSBsaWJyZXLDrWEgTWF0cGxvdGxpYiJ9DQoNCmVqZV94ID0gWydQeXRob24nLCAnUicsICdOb2RlLmpzJywgJ1BIUCddDQogDQoNCmVqZV95ID0gWzUwLDIwLDM1LDQ3XQ0KIA0KDQpwbHQuYmFyKGVqZV94LCBlamVfeSkNCiANCg0KcGx0LnlsYWJlbCgnQ2FudGlkYWQgZGUgdXN1YXJpb3MnKQ0KIA0KDQpwbHQueGxhYmVsKCdMZW5ndWFqZXMgZGUgcHJvZ3JhbWFjacOzbicpDQogDQoNCnBsdC50aXRsZSgnVXN1YXJpb3MgZGUgbGVuZ3VhamVzIGRlIHByb2dyYW1hY2nDs24nKQ0KIA0KDQpwbHQuc2hvdygpDQoNCg0KYGBgDQoNCg0KDQojIyBCYXIgQ2hhcnRzIC0gU2VhYm9ybg0KDQoqKlNlYWJvcm4qKltAbWljaGFlbF93YXNrb21fMjAxN184ODM4NTldIGVzIHVuYSBsaWJyZXLDrWEgZGUgUHl0aG9uIHF1ZSBub3MgcGVybWl0ZSBjcmVhciBncsOhZmljb3MgZXN0YWTDrXN0aWNvcyBkZSBncmFuIGNhbGlkYWQsIGZ1ZSBjcmVhZGEgdG9tYW5kbyBjb21vIGJhc2UgKipNYXRwbG90bGliKiouDQoNCmBgYHtweXRob24scmVzdWx0cz0naGlkZScsY29sbGFwc2U9VFJVRSxmaWcuYWxpZ249ImNlbnRlciIsZmlnLmNhcD0iQmFyIENoYXJ0IGNyZWFkbyB1c2FuZG8gbGEgbGlicmVyw61hIFNlYWJvcm4ifQ0KDQplamVfeCA9IFs0LDYsOF0NCg0KZWplX3kgPSBbMTEsNywxNF0NCg0Kc25zLmJhcnBsb3QoeD1lamVfeCx5PWVqZV95KQ0KDQpwbHQudGl0bGUoIk7Dum1lcm8gZGUgY2lsaW5kcm9zIikNCg0KcGx0LnhsYWJlbCgiQ2lsaW5kcm9zIikNCg0KcGx0LnlsYWJlbCgiRnJlY3VlbmNpYXMiKQ0KDQpwbHQuc2hvdygpDQoNCg0KYGBgDQoNCg0KIyMgWW91VHViZSAtIFR1dG9yaWFsDQoNCkNvbXBhcnRpbW9zIGVsIHNpZ3VpZW50ZSB0dXRvcmlhbCB0b21hZG8gZGUgbGEgcGxhdGFmb3JtYSAqKllvdVR1YmUqKiBxdWUgbXVlc3RyYSBjb21vIGNyZWFyIGRpYWdyYW1hcyBkZSBiYXJyYXMgKCoqQmFyIENoYXJ0cyoqKSBoYWNpZW5kbyB1c28gZGUgbGEgZnVuY2nDs24gYGJhcnBsb3QoKWAgeSBlbCBwYXF1ZXRlICoqZ2dwbG90MioqIGRlbCBsZW5ndWFqZSBkZSBwcm9ncmFtYWNpw7NuIFIuDQoNCg0KYGBge3IgdmVtYmVkcn0NCg0KZW1iZWRfdXJsKCJodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PUVreFJqMDJpYUxrJnQ9NnMiKSAlPiUgDQogIHVzZV9hbGlnbigiY2VudGVyIikNCg0KYGBgDQoNCg0KIyMgUmVmZXJlbmNpYXMgQmlibGlvZ3LDoWZpY2FzDQoNCg0KDQoNCjxkaXYgY2xhc3M9InRvY2lmeS1leHRlbmQtcGFnZSIgZGF0YS11bmlxdWU9InRvY2lmeS1leHRlbmQtcGFnZSIgc3R5bGU9ImhlaWdodDogMDsiPjwvZGl2Pg0KDQoNCg==</div>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeSourceEmbed("sintaxis_rmarkdown_001.Rmd");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

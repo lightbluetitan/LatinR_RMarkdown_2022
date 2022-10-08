@@ -1,0 +1,50 @@
+---
+title: "Introducción a RMarkdown"
+subtitle: Sintaxis Básica RMarkdown
+---
+
+```{r setup,include=FALSE}
+knitr::opts_chunk$set(echo=TRUE)
+```
+
+<script type="text/javascript" src="links.js"></script>
+
+## RMarkdown 101
+
+**RMarkdown** es un paquete (**package**) del lenguaje de programación R, que nos permite unir nuestra investigación, texto plano con código de R, Python y una larga lista de lenguajes de programación para crear documentos reproducibles en formatos HTML,PDF, Microsoft Word entre otros.
+
+A continuación, mostramos la lista de lenguajes de programación con los que podemos trabajar con **RMarkdown**
+
+```{r}
+names(knitr::knit_engines$get())
+```
+
+## RMarkdown - Overview
+
+La siguiente imagen muestra el proceso de creación de documentos reproducibles en **RMarkdown**, desde la unión de nuestro texto plano y el código de R hasta la creación de documentos HTML,PDF,Microsoft Word entre otros.
+
+
+<center>
+
+![](rmarkdown_proceso_01.png)
+
+</center>
+
+
+## RMarkdown - Packages
+
+**RMarkdown** es desde ya un paquete muy poderoso y versatil, pero cuenta con la ayuda de otros paquetes para acciones especificas que mostramos a continuación:
+
+
+- **FlexDashboard**
+
+- **Distill**
+
+- **Bookdown**
+
+- **Blogdown**
+
+
+
+<div class="tocify-extend-page" data-unique="tocify-extend-page" style="height: 0;"></div>
+

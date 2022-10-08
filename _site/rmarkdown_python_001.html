@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Renzo Cáceres Rossi" />
+
+
+<title>Bar Charts - Python</title>
+
+<script src="site_libs/header-attrs-2.16/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/united.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<script src="site_libs/navigation-1.1/sourceembed.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+<style type="text/css">
+#rmd-source-code {
+  display: none;
+}
+</style>
+
+<style type="text/css">
+/* for pandoc --citeproc since 2.11 */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style_003.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Intro RMarkdown</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Home
+  </a>
+</li>
+<li>
+  <a href="herramientas.html">
+    <span class="fa fa-tools"></span>
+     
+    Herramientas
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Labs
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="sintaxis_rmarkdown_001.html">R - RMarkdown</a>
+    </li>
+    <li>
+      <a href="rmarkdown_python_001.html">Python - RMarkdown</a>
+    </li>
+    <li>
+      <a href="mapas_interactivos_folium.html">Mapas - Folium</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://twitter.com/RHablamos">
+    <span class="fa fa-twitter"></span>
+     
+    
+  </a>
+</li>
+<li>
+  <a href="https://github.com/lightbluetitan">
+    <span class="fa fa-github"></span>
+     
+    
+  </a>
+</li>
+<li>
+  <a href="https://www.linkedin.com/in/andrescaceresrossi/">
+    <span class="fa fa-linkedin"></span>
+     
+    
+  </a>
+</li>
+<li>
+  <a href="https://www.facebook.com/renzo.caceresrossi/">
+    <span class="fa fa-facebook"></span>
+     
+    
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-download-source" href="#">Download Rmd</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Bar Charts - Python</h1>
+<h3 class="subtitle">Matplotlib - Numpy - Seaborn</h3>
+<h4 class="author">Renzo Cáceres Rossi</h4>
+<h4 class="date">2022/10/07</h4>
+
+</div>
+
+
+<!-- RMarkdown nos permite ejecutar código y librerías de Python -->
+<script type="text/javascript" src="links.js"></script>
+<div id="diagramas-de-barras" class="section level2">
+<h2>Diagramas de Barras</h2>
+<p>El diagrama de barras (<strong>Bar Chart</strong>) es un gráfico
+estadístico que nos permite representar la distribución de frecuencias
+de variables cualitativas y cuantitativas discretas; nuestro objetivo es
+pasar del lápiz y papel al uso del lenguaje de programación Python
+3.9.7<span class="citation">(<a href="#ref-van1995python"
+role="doc-biblioref">Van Rossum &amp; Drake Jr, 1995</a>)</span>,
+recomendamos la lectura del libro <strong>Python: Los fundamentos del
+lenguaje</strong><span class="citation">(<a
+href="#ref-chazallet2016python" role="doc-biblioref">Chazallet,
+2016</a>)</span>; compartimos la siguiente imagen como referencia.</p>
+<center>
+<p><img src="diagrama_barras_amano.jpg" width="400" /></p>
+</center>
+</div>
+<div id="bar-charts---matplotlib" class="section level2">
+<h2>Bar Charts - Matplotlib</h2>
+<p><strong>Matplotlib</strong><span class="citation">(<a
+href="#ref-Hunter:2007" role="doc-biblioref">Hunter, 2007</a>)</span> es
+una librería del lenguaje de programación Python, que nos permite crear
+gráficos estadísticos de gran calidad, <strong>RMarkdown</strong><span
+class="citation">(<a href="#ref-RMarkdown" role="doc-biblioref">Allaire
+et al., 2022</a>)</span> nos permite trabajar con otros lenguajes de
+programación tales como <strong>C++, SQL, Julia</strong>, entre muchos
+otros; a continuación mostramos un diagrama de barras (<strong>Bar
+Chart</strong>) creado con Matplotlib.</p>
+<pre class="python"><code>
+mtcars_data = pd.read_csv(&quot;mtcars.csv&quot;)
+
+df = pd.DataFrame(mtcars_data)
+
+by_cyl=df.cyl.value_counts()
+
+cyl=by_cyl[:3]
+
+colores =[&#39;#000080&#39;,&#39;#FF4500&#39;,&#39;#800080&#39;]
+
+plt.bar(cyl.index,cyl,color=colores)
+plt.title(&quot;Número de Cilindros&quot;)
+
+plt.xlabel(&quot;Cilindros&quot;)
+
+plt.ylabel(&quot;Frecuencias&quot;)
+
+plt.show()
+</code></pre>
+<div class="figure" style="text-align: center">
+<img src="rmarkdown_python_001_files/figure-html/unnamed-chunk-3-1.png" alt="Bar Chart creado con la libería Matplotlib" width="672" />
+<p class="caption">
+Bar Chart creado con la libería Matplotlib
+</p>
+</div>
+</div>
+<div id="diagrama-barras-horizontal" class="section level2">
+<h2>Diagrama Barras Horizontal</h2>
+<p>A continuación, presentamos como crear un <strong>diagrama de barras
+horizontal</strong> en el lenguaje de programación Python, utilizando la
+librería Matplotlib.</p>
+<pre class="python"><code>
+eje_x = [&#39;Prog.&#39;, &#39;Ciencia&#39;, &#39;Mat.&#39;, &#39;Ing.&#39;]
+ 
+
+eje_y = [76,31,45,57]
+
+colores =[&#39;#FF8C00&#39;,&#39;#9932CC&#39;,&#39;#8B0000&#39;,&#39;#8FBC8F&#39;]
+ 
+
+plt.barh(eje_x, eje_y, color=colores)
+for index,value in enumerate(eje_y):
+    plt.text(value,index,str(value))
+
+plt.ylabel(&#39;Empleados&#39;)
+plt.xlabel(&#39;Habilidades&#39;)
+plt.title(&#39;Habilidades&#39;)
+plt.show()</code></pre>
+<div class="figure" style="text-align: center">
+<img src="rmarkdown_python_001_files/figure-html/unnamed-chunk-4-3.png" alt="Bar Chart horizontal creado con la librería Matplotlib" width="672" />
+<p class="caption">
+Bar Chart horizontal creado con la librería Matplotlib
+</p>
+</div>
+</div>
+<div id="diagrama-barras-apiladas" class="section level2">
+<h2>Diagrama Barras Apiladas</h2>
+<p>A continuación, presentamos como crear un <strong>diagrama de barras
+apiladas</strong> en el lenguaje de programación Python, utilizando las
+librerías <strong>Matplotlib</strong> y <strong>Numpy</strong><span
+class="citation">(<a href="#ref-2020NumPy-Array"
+role="doc-biblioref">Harris et al., 2020</a>)</span>.</p>
+<pre class="python"><code>
+serie_1 = [406, 387, 442, 457, 485]
+serie_2 = [421, 453, 435, 478, 512]
+ 
+ 
+numero_de_grupos = len(serie_1)
+indice_barras = np.arange(numero_de_grupos)
+ancho_barras =0.35
+ 
+plt.bar(indice_barras, serie_1, width=ancho_barras, label=&#39;Hombres&#39;)
+plt.bar(indice_barras + ancho_barras, serie_2, width=ancho_barras, label=&#39;Mujeres&#39;)
+plt.legend(loc=&#39;best&#39;)
+
+plt.xticks(indice_barras + ancho_barras, (&#39;2017&#39;, &#39;2018&#39;, &#39;2019&#39;, &#39;2020&#39;,&#39;2021&#39;))
+ 
+plt.ylabel(&#39;Numero de habitantes&#39;)
+plt.xlabel(&#39;Año&#39;)
+plt.title(&#39;Numero de habitantes por genero&#39;)
+ 
+plt.show()
+</code></pre>
+<p><img src="rmarkdown_python_001_files/figure-html/unnamed-chunk-5-5.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="bar-charts---seaborn" class="section level2">
+<h2>Bar Charts - Seaborn</h2>
+<p><strong>Seaborn</strong><span class="citation">(<a
+href="#ref-michael_waskom_2017_883859" role="doc-biblioref">Waskom et
+al., 2017</a>)</span> es una librería de Python que nos permite crear
+gráficos estadísticos de gran calidad, fue creada tomando como base
+<strong>Matplotlib</strong>.</p>
+<pre class="python"><code>
+eje_x = [4,6,8]
+
+eje_y = [11,7,14]
+
+sns.barplot(x=eje_x,y=eje_y)
+
+plt.title(&quot;Número de cilindros&quot;)
+
+plt.xlabel(&quot;Cilindros&quot;)
+
+plt.ylabel(&quot;Frecuencias&quot;)
+
+plt.show()
+</code></pre>
+<p><img src="rmarkdown_python_001_files/figure-html/unnamed-chunk-6-7.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="youtube---tutorial" class="section level2">
+<h2>YouTube - Tutorial</h2>
+<p>Compartimos el siguiente tutorial tomado de la plataforma
+<strong>YouTube</strong> que muestra como crear diagramas de barras
+(<strong>Bar Charts</strong>) en el lenguaje de programación Python,
+utilizando las librerías <strong>Matplotlib</strong> y
+<strong>Seaborn</strong>.</p>
+<center>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/jPre6LVvr5Q" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen data-external="1">
+</iframe>
+</center>
+</div>
+<div id="referencias-bibliográficas" class="section level2">
+<h2>Referencias Bibliográficas</h2>
+<div class="tocify-extend-page" data-unique="tocify-extend-page"
+style="height: 0;">
+
+</div>
+<div id="refs" class="references csl-bib-body hanging-indent"
+line-spacing="2">
+<div id="ref-RMarkdown" class="csl-entry">
+Allaire, J., Xie, Y., McPherson, J., Luraschi, J., Ushey, K., Atkins,
+A., Wickham, H., Cheng, J., Chang, W., &amp; Iannone, R. (2022).
+<em>Rmarkdown: Dynamic documents for r</em>. <a
+href="https://github.com/rstudio/rmarkdown">https://github.com/rstudio/rmarkdown</a>
+</div>
+<div id="ref-chazallet2016python" class="csl-entry">
+Chazallet, S. (2016). <em>Python 3: Los fundamentos del lenguaje</em>.
+Ediciones ENI.
+</div>
+<div id="ref-2020NumPy-Array" class="csl-entry">
+Harris, C. R., Millman, K. J., Walt, S. J. van der, Gommers, R.,
+Virtanen, P., Cournapeau, D., Wieser, E., Taylor, J., Berg, S., Smith,
+N. J., Kern, R., Picus, M., Hoyer, S., Kerkwijk, M. H. van, Brett, M.,
+Haldane, A., Fernández del Río, J., Wiebe, M., Peterson, P., … Oliphant,
+T. E. (2020). Array programming with <span>NumPy</span>.
+<em>Nature</em>, <em>585</em>, 357–362. <a
+href="https://doi.org/10.1038/s41586-020-2649-2">https://doi.org/10.1038/s41586-020-2649-2</a>
+</div>
+<div id="ref-Hunter:2007" class="csl-entry">
+Hunter, J. D. (2007). Matplotlib: A 2D graphics environment.
+<em>Computing in Science &amp; Engineering</em>, <em>9</em>(3), 90–95.
+<a
+href="https://doi.org/10.1109/MCSE.2007.55">https://doi.org/10.1109/MCSE.2007.55</a>
+</div>
+<div id="ref-van1995python" class="csl-entry">
+Van Rossum, G., &amp; Drake Jr, F. L. (1995). <em>Python reference
+manual</em>. Centrum voor Wiskunde en Informatica Amsterdam.
+</div>
+<div id="ref-michael_waskom_2017_883859" class="csl-entry">
+Waskom, M., Botvinnik, O., O’Kane, D., Hobson, P., Lukauskas, S.,
+Gemperline, D. C., Augspurger, T., Halchenko, Y., Cole, J. B.,
+Warmenhoven, J., Ruiter, J. de, Pye, C., Hoyer, S., Vanderplas, J.,
+Villalba, S., Kunter, G., Quintero, E., Bachant, P., Martin, M., …
+Qalieh, A. (2017). <em>Mwaskom/seaborn: v0.8.1 (september 2017)</em>
+(Version v0.8.1) [Computer software]. Zenodo. <a
+href="https://doi.org/10.5281/zenodo.883859">https://doi.org/10.5281/zenodo.883859</a>
+</div>
+</div>
+</div>
+
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIkJhciBDaGFydHMgLSBQeXRob24iDQpzdWJ0aXRsZTogIk1hdHBsb3RsaWIgLSBOdW1weSAtIFNlYWJvcm4iDQphdXRob3I6ICJSZW56byBDw6FjZXJlcyBSb3NzaSINCmRhdGU6ICIyMDIyLzEwLzA3Ig0Kb3V0cHV0Og0KICBodG1sX2RvY3VtZW50Og0KICAgIHRvYzogVFJVRQ0KICAgIHRvY19mbG9hdDogVFJVRQ0KICAgIGNvZGVfZG93bmxvYWQ6IFRSVUUNCiAgICB0aGVtZTogdW5pdGVkDQogICAgY3NzOiAic3R5bGVfMDAzLmNzcyINCmJpYmxpb2dyYXBoeTogYmlibGlvXzAwMi5iaWINCmNzbDogYXBhLmNzbA0KbGluay1jaXRhdGlvbnM6IHllcw0KLS0tDQoNCjwhLS0gUk1hcmtkb3duIG5vcyBwZXJtaXRlIGVqZWN1dGFyIGPDs2RpZ28geSBsaWJyZXLDrWFzIGRlIFB5dGhvbiAtLT4NCg0KYGBge3B5dGhvbixpbmNsdWRlPUZBTFNFfQ0KDQpmcm9tIHBsYXRmb3JtIGltcG9ydCBweXRob25fdmVyc2lvbg0KDQp2ZXJzaW9uPXB5dGhvbl92ZXJzaW9uKCkNCg0KaW1wb3J0IG1hdHBsb3RsaWIucHlwbG90IGFzIHBsdA0KDQppbXBvcnQgbnVtcHkgYXMgbnANCg0KaW1wb3J0IHNlYWJvcm4gYXMgc25zDQoNCmltcG9ydCBwYW5kYXMgYXMgcGQNCg0KDQpgYGANCg0KDQpgYGB7ciwgaW5jbHVkZT1GQUxTRX0NCg0KbGlicmFyeShyZXRpY3VsYXRlKQ0KDQpgYGANCg0KDQo8c2NyaXB0IHR5cGU9InRleHQvamF2YXNjcmlwdCIgc3JjPSJsaW5rcy5qcyI+PC9zY3JpcHQ+DQoNCg0KIyMgRGlhZ3JhbWFzIGRlIEJhcnJhcyANCg0KRWwgZGlhZ3JhbWEgZGUgYmFycmFzICgqKkJhciBDaGFydCoqKSBlcyB1biBncsOhZmljbyBlc3RhZMOtc3RpY28gcXVlIG5vcyBwZXJtaXRlIHJlcHJlc2VudGFyIGxhIGRpc3RyaWJ1Y2nDs24gZGUgZnJlY3VlbmNpYXMgZGUgdmFyaWFibGVzIGN1YWxpdGF0aXZhcyB5IGN1YW50aXRhdGl2YXMgZGlzY3JldGFzOyBudWVzdHJvIG9iamV0aXZvIGVzIHBhc2FyIGRlbCBsw6FwaXogeSBwYXBlbCBhbCB1c28gZGVsIGxlbmd1YWplIGRlIHByb2dyYW1hY2nDs24gUHl0aG9uIGByIHB5JHZlcnNpb25gW0B2YW4xOTk1cHl0aG9uXSwgcmVjb21lbmRhbW9zIGxhIGxlY3R1cmEgZGVsIGxpYnJvICoqUHl0aG9uOiBMb3MgZnVuZGFtZW50b3MgZGVsIGxlbmd1YWplKipbQGNoYXphbGxldDIwMTZweXRob25dOyBjb21wYXJ0aW1vcyBsYSBzaWd1aWVudGUgaW1hZ2VuIGNvbW8gcmVmZXJlbmNpYS4NCg0KDQo8Y2VudGVyPg0KDQoNCiFbXShkaWFncmFtYV9iYXJyYXNfYW1hbm8uanBnKXt3aWR0aD00MDB9DQoNCg0KPC9jZW50ZXI+DQoNCg0KIyMgQmFyIENoYXJ0cyAtIE1hdHBsb3RsaWINCg0KKipNYXRwbG90bGliKipbQEh1bnRlcjoyMDA3XSBlcyB1bmEgbGlicmVyw61hIGRlbCBsZW5ndWFqZSBkZSBwcm9ncmFtYWNpw7NuIFB5dGhvbiwgcXVlIG5vcyBwZXJtaXRlIGNyZWFyIGdyw6FmaWNvcyBlc3RhZMOtc3RpY29zIGRlIGdyYW4gY2FsaWRhZCwgKipSTWFya2Rvd24qKltAUk1hcmtkb3duXSBub3MgcGVybWl0ZSB0cmFiYWphciBjb24gb3Ryb3MgbGVuZ3VhamVzIGRlIHByb2dyYW1hY2nDs24gdGFsZXMgY29tbyAqKkMrKywgU1FMLCBKdWxpYSoqLCBlbnRyZSBtdWNob3Mgb3Ryb3M7IGEgY29udGludWFjacOzbiBtb3N0cmFtb3MgdW4gZGlhZ3JhbWEgZGUgYmFycmFzICgqKkJhciBDaGFydCoqKSBjcmVhZG8gY29uIE1hdHBsb3RsaWIuDQoNCg0KYGBge3B5dGhvbixmaWcuYWxpZ249ImNlbnRlciIscmVzdWx0cz0naGlkZScsY29sbGFwc2U9VFJVRSxmaWcuY2FwPSJCYXIgQ2hhcnQgY3JlYWRvIGNvbiBsYSBsaWJlcsOtYSBNYXRwbG90bGliIn0NCg0KbXRjYXJzX2RhdGEgPSBwZC5yZWFkX2NzdigibXRjYXJzLmNzdiIpDQoNCmRmID0gcGQuRGF0YUZyYW1lKG10Y2Fyc19kYXRhKQ0KDQpieV9jeWw9ZGYuY3lsLnZhbHVlX2NvdW50cygpDQoNCmN5bD1ieV9jeWxbOjNdDQoNCmNvbG9yZXMgPVsnIzAwMDA4MCcsJyNGRjQ1MDAnLCcjODAwMDgwJ10NCg0KcGx0LmJhcihjeWwuaW5kZXgsY3lsLGNvbG9yPWNvbG9yZXMpDQoNCnBsdC50aXRsZSgiTsO6bWVybyBkZSBDaWxpbmRyb3MiKQ0KDQpwbHQueGxhYmVsKCJDaWxpbmRyb3MiKQ0KDQpwbHQueWxhYmVsKCJGcmVjdWVuY2lhcyIpDQoNCnBsdC5zaG93KCkNCg0KDQpgYGANCg0KDQojIyBEaWFncmFtYSBCYXJyYXMgSG9yaXpvbnRhbA0KDQpBIGNvbnRpbnVhY2nDs24sIHByZXNlbnRhbW9zIGNvbW8gY3JlYXIgdW4gKipkaWFncmFtYSBkZSBiYXJyYXMgaG9yaXpvbnRhbCoqIGVuIGVsIGxlbmd1YWplIGRlIHByb2dyYW1hY2nDs24gUHl0aG9uLCB1dGlsaXphbmRvIGxhIGxpYnJlcsOtYSBNYXRwbG90bGliLiANCg0KYGBge3B5dGhvbixyZXN1bHRzPSdoaWRlJyxjb2xsYXBzZT1UUlVFLGZpZy5hbGlnbj0iY2VudGVyIixmaWcuY2FwPSJCYXIgQ2hhcnQgaG9yaXpvbnRhbCBjcmVhZG8gY29uIGxhIGxpYnJlcsOtYSBNYXRwbG90bGliIn0NCg0KZWplX3ggPSBbJ1Byb2cuJywgJ0NpZW5jaWEnLCAnTWF0LicsICdJbmcuJ10NCiANCg0KZWplX3kgPSBbNzYsMzEsNDUsNTddDQoNCmNvbG9yZXMgPVsnI0ZGOEMwMCcsJyM5OTMyQ0MnLCcjOEIwMDAwJywnIzhGQkM4RiddDQogDQoNCnBsdC5iYXJoKGVqZV94LCBlamVfeSwgY29sb3I9Y29sb3JlcykNCg0KZm9yIGluZGV4LHZhbHVlIGluIGVudW1lcmF0ZShlamVfeSk6DQogICAgcGx0LnRleHQodmFsdWUsaW5kZXgsc3RyKHZhbHVlKSkNCg0KcGx0LnlsYWJlbCgnRW1wbGVhZG9zJykNCnBsdC54bGFiZWwoJ0hhYmlsaWRhZGVzJykNCnBsdC50aXRsZSgnSGFiaWxpZGFkZXMnKQ0KcGx0LnNob3coKQ0KDQpgYGANCg0KDQojIyBEaWFncmFtYSBCYXJyYXMgQXBpbGFkYXMNCg0KDQpBIGNvbnRpbnVhY2nDs24sIHByZXNlbnRhbW9zIGNvbW8gY3JlYXIgdW4gKipkaWFncmFtYSBkZSBiYXJyYXMgYXBpbGFkYXMqKiBlbiBlbCBsZW5ndWFqZSBkZSBwcm9ncmFtYWNpw7NuIFB5dGhvbiwgdXRpbGl6YW5kbyBsYXMgbGlicmVyw61hcyAqKk1hdHBsb3RsaWIqKiB5ICoqTnVtcHkqKltAMjAyME51bVB5LUFycmF5XS4NCg0KDQpgYGB7cHl0aG9uLGZpZy5hbGlnbj0iY2VudGVyIixyZXN1bHRzPSdoaWRlJyxjb2xsYXBzZT1UUlVFfQ0KDQpzZXJpZV8xID0gWzQwNiwgMzg3LCA0NDIsIDQ1NywgNDg1XQ0Kc2VyaWVfMiA9IFs0MjEsIDQ1MywgNDM1LCA0NzgsIDUxMl0NCiANCiANCm51bWVyb19kZV9ncnVwb3MgPSBsZW4oc2VyaWVfMSkNCmluZGljZV9iYXJyYXMgPSBucC5hcmFuZ2UobnVtZXJvX2RlX2dydXBvcykNCmFuY2hvX2JhcnJhcyA9MC4zNQ0KIA0KcGx0LmJhcihpbmRpY2VfYmFycmFzLCBzZXJpZV8xLCB3aWR0aD1hbmNob19iYXJyYXMsIGxhYmVsPSdIb21icmVzJykNCnBsdC5iYXIoaW5kaWNlX2JhcnJhcyArIGFuY2hvX2JhcnJhcywgc2VyaWVfMiwgd2lkdGg9YW5jaG9fYmFycmFzLCBsYWJlbD0nTXVqZXJlcycpDQpwbHQubGVnZW5kKGxvYz0nYmVzdCcpDQoNCnBsdC54dGlja3MoaW5kaWNlX2JhcnJhcyArIGFuY2hvX2JhcnJhcywgKCcyMDE3JywgJzIwMTgnLCAnMjAxOScsICcyMDIwJywnMjAyMScpKQ0KIA0KcGx0LnlsYWJlbCgnTnVtZXJvIGRlIGhhYml0YW50ZXMnKQ0KcGx0LnhsYWJlbCgnQcOxbycpDQpwbHQudGl0bGUoJ051bWVybyBkZSBoYWJpdGFudGVzIHBvciBnZW5lcm8nKQ0KIA0KcGx0LnNob3coKQ0KDQoNCg0KYGBgDQoNCg0KIyMgQmFyIENoYXJ0cyAtIFNlYWJvcm4NCg0KKipTZWFib3JuKipbQG1pY2hhZWxfd2Fza29tXzIwMTdfODgzODU5XSBlcyB1bmEgbGlicmVyw61hIGRlIFB5dGhvbiBxdWUgbm9zIHBlcm1pdGUgY3JlYXIgZ3LDoWZpY29zIGVzdGFkw61zdGljb3MgZGUgZ3JhbiBjYWxpZGFkLCBmdWUgY3JlYWRhIHRvbWFuZG8gY29tbyBiYXNlICoqTWF0cGxvdGxpYioqLg0KDQpgYGB7cHl0aG9uLHJlc3VsdHM9J2hpZGUnLGNvbGxhcHNlPVRSVUUsZmlnLmFsaWduPSJjZW50ZXIifQ0KDQplamVfeCA9IFs0LDYsOF0NCg0KZWplX3kgPSBbMTEsNywxNF0NCg0Kc25zLmJhcnBsb3QoeD1lamVfeCx5PWVqZV95KQ0KDQpwbHQudGl0bGUoIk7Dum1lcm8gZGUgY2lsaW5kcm9zIikNCg0KcGx0LnhsYWJlbCgiQ2lsaW5kcm9zIikNCg0KcGx0LnlsYWJlbCgiRnJlY3VlbmNpYXMiKQ0KDQpwbHQuc2hvdygpDQoNCg0KYGBgDQoNCg0KDQojIyBZb3VUdWJlIC0gVHV0b3JpYWwNCg0KQ29tcGFydGltb3MgZWwgc2lndWllbnRlIHR1dG9yaWFsIHRvbWFkbyBkZSBsYSBwbGF0YWZvcm1hICoqWW91VHViZSoqIHF1ZSBtdWVzdHJhIGNvbW8gY3JlYXIgZGlhZ3JhbWFzIGRlIGJhcnJhcyAoKipCYXIgQ2hhcnRzKiopIGVuIGVsIGxlbmd1YWplIGRlIHByb2dyYW1hY2nDs24gUHl0aG9uLCB1dGlsaXphbmRvIGxhcyBsaWJyZXLDrWFzICoqTWF0cGxvdGxpYioqIHkgKipTZWFib3JuKiouDQoNCjxjZW50ZXI+DQoNCg0KPGlmcmFtZSB3aWR0aD0iNTYwIiBoZWlnaHQ9IjMxNSIgc3JjPSJodHRwczovL3d3dy55b3V0dWJlLmNvbS9lbWJlZC9qUHJlNkxWdnI1USIgdGl0bGU9IllvdVR1YmUgdmlkZW8gcGxheWVyIiBmcmFtZWJvcmRlcj0iMCIgYWxsb3c9ImFjY2VsZXJvbWV0ZXI7IGF1dG9wbGF5OyBjbGlwYm9hcmQtd3JpdGU7IGVuY3J5cHRlZC1tZWRpYTsgZ3lyb3Njb3BlOyBwaWN0dXJlLWluLXBpY3R1cmUiIGFsbG93ZnVsbHNjcmVlbiBkYXRhLWV4dGVybmFsPTE+PC9pZnJhbWU+DQoNCjwvY2VudGVyPg0KDQoNCiMjIFJlZmVyZW5jaWFzIEJpYmxpb2dyw6FmaWNhcw0KDQoNCg0KDQoNCjxkaXYgY2xhc3M9InRvY2lmeS1leHRlbmQtcGFnZSIgZGF0YS11bmlxdWU9InRvY2lmeS1leHRlbmQtcGFnZSIgc3R5bGU9ImhlaWdodDogMDsiPjwvZGl2Pg0KDQoNCg0KDQoNCg0K</div>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeSourceEmbed("rmarkdown_python_001.Rmd");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

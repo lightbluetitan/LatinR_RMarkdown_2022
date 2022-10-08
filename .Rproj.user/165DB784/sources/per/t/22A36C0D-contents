@@ -1,0 +1,254 @@
+---
+title: "Bar Charts - R"
+subtitle: "barplot() - ggplot2 - lattice"
+author: "Renzo Cáceres Rossi"
+date: "2022/10/07"
+output:
+  html_document:
+    toc: TRUE
+    toc_float: TRUE
+    code_download: TRUE
+    theme: flatly
+    css: "style_002.css"
+bibliography: biblio_001.bib
+csl: apa.csl
+link-citations: yes
+---
+
+<!-- Añadir comentarios a nuestro documento RMarkdown -- HTMl tags -->
+
+```{r setup,include=FALSE}
+
+library(ggplot2)
+
+library(lattice)
+
+library(sqldf)
+
+library(vembedr)
+
+library(reticulate)
+
+knitr::opts_chunk$set(echo=TRUE)
+```
+
+
+```{python,include=FALSE}
+
+from platform import python_version
+
+version=python_version()
+
+import matplotlib.pyplot as plt
+
+import numpy as np
+
+import seaborn as sns
+
+
+```
+
+
+<script type="text/javascript" src="links.js"></script>
+
+## Diagramas de Barras 
+
+El diagrama de barras (**Bar Chart**) es un gráfico estadístico que nos permite representar la distribución de frecuencias de variables cualitativas y cuantitativas discretas; nuestro objetivo es pasar del lápiz y papel al uso de los lenguajes de programación `r R.version.string`[@Rprogramming] y Python `r py$version`[@van1995python], recomendamos la lectura del libro **El Arte de Programar en R**[@santana2014arte]; compartimos la siguiente imagen como referencia.
+
+<center>
+
+
+![](diagrama_barras_amano.jpg){width=400}
+
+</center>
+
+
+## Data Set - mtcars {.tabset .tabset-pills}
+
+**mtcars** es un data set que ya viene precargado al momento de instalar el **lenguaje de programación R** en nuestro sistema, haremos uso de dicho data set para la creación de distintos diagramas de barras, de las 11 variables y 32 observaciones que lo componen nos enfocaremos en las variables **cyl** (cilindro) y **gear** (engranajes) como se muestra a continuación.
+
+### mtcars
+
+```{r mtcars}
+
+summary(mtcars)
+
+```
+
+
+### var_cyl
+
+```{r var_cyl}
+
+summary(mtcars$cyl)
+
+cyl_table <- sqldf("select cyl,count(cyl) as cantidad from mtcars group by cyl")
+
+cyl_table
+
+```
+
+
+### var_gear {.active}
+
+```{r var_gear}
+
+summary(mtcars$gear)
+
+gear_table <- sqldf("select gear,count(gear) as cantidad from mtcars group by gear")
+
+gear_table
+
+```
+
+
+
+### var_carb
+
+```{r var_carb}
+
+summary(mtcars$carb)
+
+carb_table <- sqldf("select carb,count(carb) as cantidad from mtcars group by carb")
+
+carb_table
+
+
+```
+
+
+## Bar Chart - barplot()
+
+La función  `barplot()` nos permite crear diagramas de barras (**Bar Charts**) en el lenguaje de programación R, utilizaremos la variable cyl (**cilindros**) para crear el gráfico estadístico respectivo, como se muestra en la siguiente imagen.
+
+```{r barplot,fig.align='center',fig.cap="Bar Chart creado con la función barplot()"}
+
+x <- table(mtcars$cyl)
+
+colores <- c("orange","blue","purple")
+
+barplot(x,xlab="Cilindros",ylab="Frecuencias",main="Número de Cilindros",col=colores)
+
+```
+
+
+## Bar Chart - ggplot2
+
+**ggplot2**[@ggplot2] es un paquete del lenguaje de programación que nos permite crear gráficos estadísticos de gran calidad, haremos uso de la variable cyl (**cilindros**) para la creación del gráfico estadístico respectivo, como se muestra a continuación.
+
+```{r ggplot2,fig.align='center',fig.cap="Bar Chart creado con el paquete ggplot2"}
+
+ggplot(mtcars,aes(cyl)) + geom_bar(fill=colores) + labs(x="Cillindros",y="Frecuencias",title="Número de Cilindros") + theme_dark()
+
+
+```
+
+
+
+## Bar Chart - Lattice
+
+**Lattice**[@lattice] es un paquete del lenguaje de programación R, que nos permite crear gráficos estadísticos de muy buena calidad, nos enfocaremos en la variable cyl (**cilindros**) para la creación del gráfico estadístico respectivo, como se muestra a continuación.
+
+```{r lattice,fig.align='center',fig.cap="Bar Chart creado con el paquete lattice"}
+
+barchart(x,xlab="Cilindros",ylab="Frecuencias",main="Número de Cilindros",col=colores,horizontal=FALSE)
+
+
+```
+
+
+## mtcars - cyl & gear
+
+A continuación, mostramos como unir dos diagramas de barras (**Bar Charts**) en un solo gráfico, tomando como base el data set **mtcars**, así como sus variables **cyl** (cilindros) y **gear** (engranajes).
+
+```{r cyl_gear,fig.align='center'}
+
+y <- table(mtcars$gear)
+
+par(mfrow=c(1,2))
+
+barplot(x,xlab="Cilindros",ylab="Frecuencias",main="Número de Cilindros",col=colores)
+
+barplot(y,xlab="Engranajes",ylab="Frecuencias",main="Número de Engranajes",col=rainbow(3))
+
+
+```
+
+
+## Bar Charts - Matplotlib
+
+**Matplotlib**[@Hunter:2007] es una librería del lenguaje de programación Python, que nos permite crear gráficos estadísticos de gran calidad, **RMarkdown**[@RMarkdown] nos permite trabajar con otros lenguajes de programación tales como **C++, SQL, Julia**, entre muchos otros; a continuación mostramos un diagrama de barras (**Bar Chart**) creado con Matplotlib.
+
+
+```{python,results='hide',collapse=TRUE,fig.align="center",fig.cap="Bar Chart creado con la librería Matplotlib"}
+
+eje_x = ['Python', 'R', 'Node.js', 'PHP']
+ 
+
+eje_y = [50,20,35,47]
+ 
+
+plt.bar(eje_x, eje_y)
+ 
+
+plt.ylabel('Cantidad de usuarios')
+ 
+
+plt.xlabel('Lenguajes de programación')
+ 
+
+plt.title('Usuarios de lenguajes de programación')
+ 
+
+plt.show()
+
+
+```
+
+
+
+## Bar Charts - Seaborn
+
+**Seaborn**[@michael_waskom_2017_883859] es una librería de Python que nos permite crear gráficos estadísticos de gran calidad, fue creada tomando como base **Matplotlib**.
+
+```{python,results='hide',collapse=TRUE,fig.align="center",fig.cap="Bar Chart creado usando la librería Seaborn"}
+
+eje_x = [4,6,8]
+
+eje_y = [11,7,14]
+
+sns.barplot(x=eje_x,y=eje_y)
+
+plt.title("Número de cilindros")
+
+plt.xlabel("Cilindros")
+
+plt.ylabel("Frecuencias")
+
+plt.show()
+
+
+```
+
+
+## YouTube - Tutorial
+
+Compartimos el siguiente tutorial tomado de la plataforma **YouTube** que muestra como crear diagramas de barras (**Bar Charts**) haciendo uso de la función `barplot()` y el paquete **ggplot2** del lenguaje de programación R.
+
+
+```{r vembedr}
+
+embed_url("https://www.youtube.com/watch?v=EkxRj02iaLk&t=6s") %>% 
+  use_align("center")
+
+```
+
+
+## Referencias Bibliográficas
+
+
+
+
+<div class="tocify-extend-page" data-unique="tocify-extend-page" style="height: 0;"></div>
+
+

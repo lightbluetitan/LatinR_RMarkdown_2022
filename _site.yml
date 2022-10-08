@@ -1,0 +1,36 @@
+navbar:
+  title: "Intro RMarkdown"
+  left:
+    - text: "Home"
+      href: index.html
+      icon: fa-home
+    - text: "Herramientas"
+      href: herramientas.html
+      icon: fa-tools
+    - text: "Labs"
+      menu:
+      - text: "R - RMarkdown"
+        href: sintaxis_rmarkdown_001.html
+      - text: "Python - RMarkdown"
+        href: rmarkdown_python_001.html
+      - text: "Mapas - Folium"
+        href: mapas_interactivos_folium.html
+  right:
+     - text: ""
+       href: https://twitter.com/RHablamos
+       icon: fa-twitter
+     - text: ""
+       href: https://github.com/lightbluetitan
+       icon: fa-github
+     - text: ""
+       href: https://www.linkedin.com/in/andrescaceresrossi/
+       icon: fa-linkedin
+     - text: ""
+       href: https://www.facebook.com/renzo.caceresrossi/
+       icon: fa-facebook
+output:
+  html_document:
+    theme: united
+    
+    
+  

@@ -1,0 +1,175 @@
+---
+title: "Mapas Interactivos en Python"
+subtitle: "Folium - Leaflet"
+author: "Renzo Cáceres Rossi"
+date: "2022/10/08"
+output:
+  html_document:
+    toc: TRUE
+    toc_float: TRUE
+    code_download: TRUE
+    theme: journal
+---
+
+<!-- Folium es una librería de Python para crear mapas interactivos -->
+
+```{python,include=FALSE}
+
+import folium as fl
+
+import pandas as pd
+
+from folium.plugins import MiniMap
+
+from folium.plugins import FloatImage
+
+
+```
+
+
+<script type="text/javascript" src="links.js"></script>
+
+
+## Crear Mapa Base 
+
+```{python,results='hide',collapse=TRUE}
+mapa_base = fl.Map()
+
+mapa_base
+
+```
+
+
+## Ubicación - Latitud - Longitud
+
+```{python,results='hide',collapse=TRUE}
+palacio_nacional = fl.Map(location=[18.47474559888523, -69.89787861615132],zoom_start=16)
+
+palacio_nacional
+
+```
+
+
+## Marcador - Círculo - Logo
+
+```{python,results='hide',collapse=TRUE}
+
+palacio_nacional = fl.Map(location=[18.47474559888523, -69.89787861615132],zoom_start=16)
+
+img_001 = "https://bit.ly/3IwJKkg"
+
+FloatImage(img_001,left=90,bottom=90).add_to(palacio_nacional)
+
+fl.Marker(location=[18.47474559888523, -69.89787861615132],
+          icon=fl.Icon(color="darkblue",icon="ok-sign")).add_to(palacio_nacional)
+
+fl.Circle(location=[18.47474559888523, -69.89787861615132],
+          color="orange",fill_color="purple",fill_opacity=0.4,weight=4,radius=40).add_to(palacio_nacional)
+
+palacio_nacional
+
+
+```
+
+
+## Tiles - Menú Tiles
+
+```{python,results='hide',collapse=TRUE}
+
+palacio_nacional = fl.Map(location=[18.47474559888523, -69.89787861615132],zoom_start=16)
+
+img_001 = "https://bit.ly/3IwJKkg"
+
+FloatImage(img_001,left=90,bottom=90).add_to(palacio_nacional)
+
+fl.Marker(location=[18.47474559888523, -69.89787861615132],
+          icon=fl.Icon(color="darkblue",icon="ok-sign")).add_to(palacio_nacional)
+
+fl.Circle(location=[18.47474559888523, -69.89787861615132],
+          color="orange",fill_color="purple",fill_opacity=0.4,weight=4,radius=40).add_to(palacio_nacional)
+
+fl.TileLayer("stamenterrain").add_to(palacio_nacional)
+
+fl.TileLayer("stamentoner").add_to(palacio_nacional)
+
+fl.TileLayer("stamenwatercolor").add_to(palacio_nacional)
+
+fl.TileLayer("cartodbpositron").add_to(palacio_nacional)
+
+fl.TileLayer("OpenStreetMap").add_to(palacio_nacional)
+
+fl.LayerControl(position="bottomleft").add_to(palacio_nacional)
+
+palacio_nacional
+
+
+```
+
+
+## Popup - Tooltip - Popup 
+
+```{python,results='hide',collapse=TRUE}
+palacio_nacional = fl.Map(location=[18.47474559888523, -69.89787861615132],zoom_start=16)
+
+img_001 = "https://bit.ly/3IwJKkg"
+
+FloatImage(img_001,left=90,bottom=90).add_to(palacio_nacional)
+
+html='''
+<br>
+<b>Lugar:Palacio Nacional Rep. Dom</b><br>
+<b>Latitud:18.47474559888523</b><br>
+<b>Longitud:-69.89787861615132</b><br>
+<b>URL:<a href='https://bit.ly/3hgCyg3' target='_blank'>Palacio Nacional</a><br><br>
+<center><img src='https://bit.ly/36u5WNB' width=200 height=100></center>
+'''
+
+iframe = fl.IFrame(html=html,width=300 ,height=250)
+
+
+fl.Marker(location=[18.47474559888523, -69.89787861615132],
+          icon=fl.Icon(color="darkblue",icon="ok-sign"),popup=fl.Popup(iframe)).add_to(palacio_nacional)
+
+fl.Circle(location=[18.47474559888523, -69.89787861615132],
+          color="orange",fill_color="purple",fill_opacity=0.4,weight=4,radius=40,tooltip="Palacio Nacional").add_to(palacio_nacional)
+
+palacio_nacional
+
+
+```
+
+
+
+## Múltiples Marcadores - Caso I
+
+```{python,results='hide',collapse=TRUE}
+
+palacio_nacional = fl.Map(location=[18.47474559888523, -69.89787861615132],zoom_start=16)
+
+img_001 = "https://bit.ly/3IwJKkg"
+
+FloatImage(img_001,left=90,bottom=90).add_to(palacio_nacional)
+
+
+fl.Marker(location=[18.47416921486365,-69.88824745014279],
+          icon=fl.Icon(color="darkblue",icon="ok-sign")).add_to(palacio_nacional)
+
+fl.Marker(location=[18.471116404923126,-69.8871531089362],
+          icon=fl.Icon(color="orange",icon="fire")).add_to(palacio_nacional)
+
+fl.Marker(location=[18.468775880481004,-69.89011426748678],
+          icon=fl.Icon(color="purple",icon="cloud")).add_to(palacio_nacional)
+
+fl.Marker(location=[18.47474559888523, -69.89787861615132],
+          icon=fl.Icon(color="blue",icon="info-sign")).add_to(palacio_nacional)
+
+
+palacio_nacional
+
+
+```
+
+
+
+
+<div class="tocify-extend-page" data-unique="tocify-extend-page" style="height: 0;"></div>
